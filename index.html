@@ -116,7 +116,7 @@
       </div>
       <div class="field">
         <label for="inp-tel">Seu celular (com DDD)</label>
-        <input type="tel" id="inp-tel" placeholder="(11) 99999-9999" autocomplete="new-password" inputmode="numeric" />
+        <input type="tel" id="inp-tel" placeholder="(11) 99999-9999 ou +1 555 1234" autocomplete="new-password" />
       </div>
       <div id="login-error" class="error-msg">Preencha nome e telefone para continuar.</div>
       <button class="btn-primary" id="btn-login" onclick="doLogin()">Acessar</button>
@@ -282,7 +282,22 @@
   var logData     = [];
 
   // ── Utilitários ───────────────────────────────────
-  function cleanPhone(v) { return v.replace(/\D/g, ""); }
+  function cleanPhone(v) { return v.replace(/[\s\-\(\)]/g, ""); }
+
+  function validatePhone(raw) {
+    var v = raw.trim();
+    // Internacional: começa com +, pelo menos 8 dígitos após o +
+    if (v.startsWith("+")) {
+      var digits = v.replace(/\D/g, "");
+      return digits.length >= 8 ? { valid: true, normalized: v.replace(/[\s\-\(\)]/g, "") } : { valid: false };
+    }
+    // Brasil: apenas dígitos, 10 ou 11 caracteres (DDD + número)
+    var digits = v.replace(/\D/g, "");
+    if (digits.length === 10 || digits.length === 11) {
+      return { valid: true, normalized: digits };
+    }
+    return { valid: false };
+  }
 
   function formatDate(ts) {
     if (!ts) return "—";
@@ -357,10 +372,15 @@
   // ── Login ──────────────────────────────────────────
   function doLogin() {
     var nome = document.getElementById("inp-nome").value.trim();
-    var tel  = cleanPhone(document.getElementById("inp-tel").value);
+    var rawTel = document.getElementById("inp-tel").value;
     var err  = document.getElementById("login-error");
-    if (!nome || tel.length < 10) { err.style.display = "block"; return; }
+    var phoneResult = validatePhone(rawTel);
+    if (!nome || !phoneResult.valid) {
+      err.textContent = !nome ? "Preencha seu nome completo." : "Telefone inválido. Use DDD + número (Brasil) ou +código país (internacional).";
+      err.style.display = "block"; return;
+    }
     err.style.display = "none";
+    var tel = phoneResult.normalized;
     document.getElementById("btn-login").disabled = true;
 
     db.collection("acessos").where("tel", "==", tel).limit(1).get()
