@@ -6,377 +6,75 @@
   <title>Boletim Médico</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f7f6f3;
-      --card: #ffffff;
-      --border: #e4e2db;
-      --text: #1a1a18;
-      --muted: #7a7870;
-      --accent: #2563eb;
-      --accent-bg: #eff6ff;
-      --accent-text: #1d4ed8;
-      --success: #16a34a;
-      --success-bg: #f0fdf4;
-      --success-border: #bbf7d0;
-      --danger: #dc2626;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --bg: #f7f6f3; --card: #ffffff; --border: #e4e2db;
+      --text: #1a1a18; --muted: #7a7870; --accent: #2563eb;
+      --accent-bg: #eff6ff; --accent-text: #1d4ed8;
+      --success: #16a34a; --success-bg: #f0fdf4; --success-border: #bbf7d0;
+      --danger: #dc2626; --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ---------- Layout ---------- */
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     .page { display: none; }
     .page.active { display: block; }
-
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 3rem;
-    }
-
-    /* ---------- Header ---------- */
-    .app-header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 0.875rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .app-header .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .app-header .brand-icon {
-      width: 32px; height: 32px;
-      background: var(--accent-bg);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-    }
-    .app-header .brand-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .btn-logout {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-logout:hover { background: var(--bg); }
-
-    /* ---------- Cards ---------- */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
-    }
-
-    /* ---------- Login ---------- */
-    .login-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem 1rem;
-    }
-    .login-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 2rem 1.5rem;
-      box-shadow: var(--shadow);
-      width: 100%;
-      max-width: 420px;
-    }
-    .login-icon {
-      width: 52px; height: 52px;
-      background: var(--accent-bg);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px;
-      margin-bottom: 1.25rem;
-    }
-    .login-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .login-sub {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 1.75rem;
-    }
-
-    /* ---------- Form ---------- */
+    .container { max-width: 480px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .app-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0.875rem 1rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 32px; height: 32px; background: var(--accent-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .brand-name { font-size: 15px; font-weight: 600; color: var(--text); }
+    .btn-logout { background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; box-shadow: var(--shadow); }
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem 1rem; }
+    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 2rem 1.5rem; box-shadow: var(--shadow); width: 100%; max-width: 420px; }
+    .login-icon { width: 52px; height: 52px; background: var(--accent-bg); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 1.25rem; }
+    .login-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .login-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 1.75rem; }
     .field { margin-bottom: 1rem; }
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    input[type=text], input[type=tel], textarea {
-      width: 100%;
-      padding: 10px 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 15px;
-      color: var(--text);
-      background: var(--bg);
-      outline: none;
-      transition: border-color 0.15s;
-      font-family: inherit;
-    }
+    label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    input[type=text], input[type=tel], textarea { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; color: var(--text); background: var(--bg); outline: none; font-family: inherit; -webkit-appearance: none; }
     input:focus, textarea:focus { border-color: var(--accent); background: #fff; }
     textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
-    .error-msg {
-      font-size: 12px;
-      color: var(--danger);
-      margin-top: 8px;
-      display: none;
-    }
-
-    /* ---------- Buttons ---------- */
-    .btn-primary {
-      width: 100%;
-      padding: 11px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      margin-top: 0.25rem;
-    }
-    .btn-primary:hover { opacity: 0.88; }
-    .btn-primary:disabled { opacity: 0.5; cursor: default; }
-    .btn-secondary {
-      padding: 8px 16px;
-      background: none;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-secondary:hover { background: var(--bg); }
-
-    /* ---------- Tabs (admin) ---------- */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 1.25rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 5px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 8px 6px;
-      border: none;
-      border-radius: 8px;
-      background: none;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .tab-btn.active {
-      background: var(--accent-bg);
-      color: var(--accent-text);
-    }
+    .error-msg { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
+    .btn-primary { width: 100%; padding: 11px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 0.25rem; -webkit-appearance: none; }
+    .btn-primary:disabled { opacity: 0.5; }
+    .btn-secondary { padding: 8px 16px; background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 5px; }
+    .tab-btn { flex: 1; padding: 8px 6px; border: none; border-radius: 8px; background: none; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; }
+    .tab-btn.active { background: var(--accent-bg); color: var(--accent-text); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
-
-    /* ---------- News items ---------- */
-    .news-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 0.75rem;
-    }
-    .news-meta {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 7px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .news-dot {
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .news-text {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text);
-      white-space: pre-wrap;
-    }
-    .news-delete {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 16px;
-      padding: 4px;
-      border-radius: 6px;
-      transition: color 0.15s;
-      float: right;
-      margin: -4px -6px 0 8px;
-    }
-    .news-delete:hover { color: var(--danger); }
-
-    /* ---------- Meet banner ---------- */
-    .meet-banner {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--success-bg);
-      border: 1px solid var(--success-border);
-      border-radius: 14px;
-      padding: 1rem 1.25rem;
-      text-decoration: none;
-      margin-bottom: 1.25rem;
-      transition: opacity 0.15s;
-    }
-    .meet-banner:hover { opacity: 0.85; }
-    .meet-icon {
-      width: 40px; height: 40px;
-      background: var(--success);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
+    .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+    .news-meta { font-size: 11px; color: var(--muted); margin-bottom: 7px; display: flex; align-items: center; gap: 5px; }
+    .news-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; }
+    .news-text { font-size: 15px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
+    .news-delete { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; float: right; margin: -4px -6px 0 8px; }
+    .meet-banner { display: flex; align-items: center; gap: 14px; background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 14px; padding: 1rem 1.25rem; text-decoration: none; margin-bottom: 1.25rem; }
+    .meet-icon { width: 40px; height: 40px; background: var(--success); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .meet-label { font-size: 11px; font-weight: 600; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; }
     .meet-desc { font-size: 14px; font-weight: 500; color: #166534; margin-top: 2px; }
     .meet-arrow { margin-left: auto; font-size: 18px; color: var(--success); }
-
-    /* ---------- Log table ---------- */
     .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .log-table th {
-      text-align: left;
-      padding: 8px 10px;
-      font-weight: 600;
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      border-bottom: 1px solid var(--border);
-    }
-    .log-table td {
-      padding: 9px 10px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
-    }
+    .log-table th { text-align: left; padding: 8px 10px; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .log-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
     .log-table tr:last-child td { border-bottom: none; }
-
-    /* ---------- Section title ---------- */
-    .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 1.5rem 0 0.75rem;
-    }
-
-    /* ---------- Toast ---------- */
-    .toast {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1a18;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 0;
-      transition: all 0.25s;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 100;
-    }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 1.5rem 0 0.75rem; }
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ---------- Loading ---------- */
-    .loader {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      flex-direction: column;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .spinner {
-      width: 28px; height: 28px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 12px; color: var(--muted); font-size: 14px; }
+    .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .empty { font-size: 14px; color: var(--muted); text-align: center; padding: 2rem 0; }
-
-    /* ---------- Welcome bar ---------- */
-    .welcome-bar {
-      background: var(--accent-bg);
-      border: 1px solid #bfdbfe;
-      border-radius: 12px;
-      padding: 0.875rem 1.1rem;
-      margin-bottom: 1.25rem;
-      font-size: 14px;
-    }
+    .welcome-bar { background: var(--accent-bg); border: 1px solid #bfdbfe; border-radius: 12px; padding: 0.875rem 1.1rem; margin-bottom: 1.25rem; font-size: 14px; }
     .welcome-bar strong { color: var(--accent-text); }
     .welcome-bar span { color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
 
-<!-- Loading -->
 <div id="page-loading" class="page active loader">
   <div class="spinner"></div>
   <span>Carregando...</span>
 </div>
 
-<!-- Login -->
 <div id="page-login" class="page">
   <div class="login-wrap">
     <div class="login-card">
@@ -397,122 +95,96 @@
   </div>
 </div>
 
-<!-- Notícias (família) -->
 <div id="page-news" class="page">
   <header class="app-header">
-    <div class="brand">
-      <div class="brand-icon">🏥</div>
-      <div class="brand-name">Boletim médico</div>
-    </div>
+    <div class="brand"><div class="brand-icon">🏥</div><div class="brand-name">Boletim médico</div></div>
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </header>
   <div class="container">
-    <div class="welcome-bar" id="welcome-bar">
-      Olá, <strong id="welcome-name">—</strong><br>
-      <span>Atualizações em tempo real sobre a recuperação.</span>
-    </div>
+    <div class="welcome-bar">Olá, <strong id="welcome-name">—</strong><br><span>Atualizações em tempo real sobre a recuperação.</span></div>
     <div id="meet-area"></div>
     <div class="section-title">Boletins</div>
     <div id="news-list"><div class="empty">Nenhum boletim ainda.</div></div>
   </div>
 </div>
 
-<!-- Admin -->
 <div id="page-admin" class="page">
   <header class="app-header">
-    <div class="brand">
-      <div class="brand-icon">⚙️</div>
-      <div class="brand-name">Admin</div>
-    </div>
+    <div class="brand"><div class="brand-icon">⚙️</div><div class="brand-name">Admin</div></div>
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </header>
   <div class="container">
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('tab-post', this)">Boletim</button>
-      <button class="tab-btn" onclick="switchTab('tab-meet', this)">Meet</button>
-      <button class="tab-btn" onclick="switchTab('tab-log', this)">Acessos</button>
+      <button class="tab-btn active" onclick="switchTab('tab-post',this)">Boletim</button>
+      <button class="tab-btn" onclick="switchTab('tab-meet',this)">Meet</button>
+      <button class="tab-btn" onclick="switchTab('tab-log',this)">Acessos</button>
     </div>
-
-    <!-- Tab: postar -->
     <div id="tab-post" class="tab-panel active">
       <div class="card">
         <div class="field" style="margin-bottom:0.75rem;">
           <label for="post-text">Novo boletim</label>
-          <textarea id="post-text" placeholder="Ex: Boa tarde. Pedro está bem, sem febre. Medicação ajustada. Próxima consulta amanhã às 14h."></textarea>
+          <textarea id="post-text" placeholder="Ex: Boa tarde. Pedro está bem, sem febre. Medicação ajustada."></textarea>
         </div>
         <button class="btn-primary" onclick="postNews()">Publicar</button>
       </div>
       <div class="section-title">Publicados</div>
       <div id="admin-news-list"><div class="empty">Nenhum boletim ainda.</div></div>
     </div>
-
-    <!-- Tab: meet -->
     <div id="tab-meet" class="tab-panel">
       <div class="card">
         <div class="field">
           <label for="meet-url">Link do Google Meet</label>
-          <input type="text" id="meet-url" placeholder="https://meet.google.com/abc-defg-hij" />
+          <input type="text" id="meet-url" placeholder="https://meet.google.com/abc-defg-hij" autocomplete="off" />
         </div>
         <div class="field" style="margin-bottom:0.75rem;">
           <label for="meet-desc">Descrição (horário, etc.)</label>
-          <input type="text" id="meet-desc" placeholder="Ex: Reunião hoje às 19h — todos da família" />
+          <input type="text" id="meet-desc" placeholder="Ex: Reunião hoje às 19h — todos da família" autocomplete="off" />
         </div>
         <button class="btn-primary" onclick="saveMeet()">Salvar link</button>
-        <button class="btn-secondary" onclick="removeMeet()" style="margin-top:8px; width:100%;">Remover banner</button>
+        <button class="btn-secondary" onclick="removeMeet()" style="margin-top:8px;width:100%;">Remover banner</button>
       </div>
     </div>
-
-    <!-- Tab: log -->
     <div id="tab-log" class="tab-panel">
-      <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="card" style="padding:0;overflow:hidden;">
         <table class="log-table">
           <thead><tr><th>Nome</th><th>Telefone</th><th>Quando</th></tr></thead>
           <tbody id="log-body"><tr><td colspan="3" class="empty">Sem acessos ainda.</td></tr></tbody>
         </table>
       </div>
-      <button class="btn-secondary" onclick="downloadCSV()" style="margin-top: 1rem; width: 100%;">⬇ Baixar CSV</button>
+      <button class="btn-secondary" onclick="downloadCSV()" style="margin-top:1rem;width:100%;">⬇ Baixar CSV</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!--  Firebase SDK                               -->
-<!-- ═══════════════════════════════════════════ -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getFirestore, collection, doc,
-    addDoc, setDoc, getDoc, getDocs,
-    deleteDoc, onSnapshot,
-    serverTimestamp, query, orderBy
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- Firebase SDK (compat - funciona em todos os browsers) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  // ══════════════════════════════════════════
-  //  🔧 COLE SUAS CREDENCIAIS FIREBASE AQUI
-  // ══════════════════════════════════════════
+<script>
+  // ═══════════════════════════════════════
+  //  COLE SUAS CREDENCIAIS FIREBASE AQUI
+  // ═══════════════════════════════════════
   const firebaseConfig = {
-  apiKey:            "AIzaSyDi1_qKgponC9QakJkQ73ZJ0Cgm_NkGNBU",
-  authDomain:        "boletim-medico-oblesrczuk.firebaseapp.com",
-  projectId:         "boletim-medico-oblesrczuk",
-  storageBucket:     "boletim-medico-oblesrczuk.firebasestorage.app",
-  messagingSenderId: "461214222116",
-  appId:             "1:461214222116:web:9e0ccd2e422b7b080015b1"
-};
-  // ══════════════════════════════════════════
+    apiKey:            "AIzaSyDi1_qKgponC9QakJkQ73ZJ0Cgm_NkGNBU",
+    authDomain:        "boletim-medico-oblesrczuk.firebaseapp.com",
+    projectId:         "boletim-medico-oblesrczuk",
+    storageBucket:     "boletim-medico-oblesrczuk.firebasestorage.app",
+    messagingSenderId: "461214222116",
+    appId:             "1:461214222116:web:9e0ccd2e422b7b080015b1"
+  };
 
-  // Número do admin (sem formatação, apenas dígitos)
+  // Número do admin (só dígitos, com DDD)
   const ADMIN_PHONE = "11992479798"; // ← troque pelo seu número
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
   let currentUser = null;
   let unsubNews = null;
   let logData = [];
 
-  // ── Utilitários ──────────────────────────
   function cleanPhone(v) { return v.replace(/\D/g, ""); }
 
   function formatDate(ts) {
@@ -522,58 +194,54 @@
   }
 
   function show(id) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
   }
 
   function toast(msg) {
-    const t = document.getElementById("toast");
+    var t = document.getElementById("toast");
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 2500);
+    setTimeout(function() { t.classList.remove("show"); }, 2500);
   }
 
   function switchTab(id, btn) {
-    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.remove("active"); });
+    document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     btn.classList.add("active");
     if (id === "tab-log") loadLog();
     if (id === "tab-meet") loadMeetAdmin();
   }
-  window.switchTab = switchTab;
 
-  // ── Login ─────────────────────────────────
-  async function doLogin() {
-    const nome = document.getElementById("inp-nome").value.trim();
-    const tel  = cleanPhone(document.getElementById("inp-tel").value);
-    const err  = document.getElementById("login-error");
+  function doLogin() {
+    var nome = document.getElementById("inp-nome").value.trim();
+    var tel  = cleanPhone(document.getElementById("inp-tel").value);
+    var err  = document.getElementById("login-error");
     if (!nome || tel.length < 10) { err.style.display = "block"; return; }
     err.style.display = "none";
-
     document.getElementById("btn-login").disabled = true;
-    try {
-      await addDoc(collection(db, "acessos"), {
-        nome, tel, ts: serverTimestamp()
+
+    db.collection("acessos").add({ nome: nome, tel: tel, ts: firebase.firestore.FieldValue.serverTimestamp() })
+      .then(function() {
+        currentUser = { nome: nome, tel: tel };
+        if (tel === ADMIN_PHONE) {
+          show("page-admin");
+          loadAdminNews();
+          loadMeetAdmin();
+        } else {
+          document.getElementById("welcome-name").textContent = nome;
+          show("page-news");
+          listenNews();
+          loadMeet();
+        }
+      })
+      .catch(function(e) {
+        err.textContent = "Erro ao conectar: " + e.message;
+        err.style.display = "block";
+        document.getElementById("btn-login").disabled = false;
       });
-      currentUser = { nome, tel };
-      if (tel === ADMIN_PHONE) {
-        show("page-admin");
-        loadAdminNews();
-        loadMeetAdmin();
-      } else {
-        document.getElementById("welcome-name").textContent = nome;
-        show("page-news");
-        listenNews();
-        loadMeet();
-      }
-    } catch(e) {
-      err.textContent = "Erro ao conectar. Tente novamente.";
-      err.style.display = "block";
-    }
-    document.getElementById("btn-login").disabled = false;
   }
-  window.doLogin = doLogin;
 
   function doLogout() {
     if (unsubNews) { unsubNews(); unsubNews = null; }
@@ -582,127 +250,106 @@
     document.getElementById("inp-tel").value  = "";
     show("page-login");
   }
-  window.doLogout = doLogout;
 
-  // ── Boletins (família) ────────────────────
   function listenNews() {
-    const q = query(collection(db, "boletins"), orderBy("ts", "desc"));
-    unsubNews = onSnapshot(q, snap => {
-      const el = document.getElementById("news-list");
+    var q = db.collection("boletins").orderBy("ts", "desc");
+    unsubNews = q.onSnapshot(function(snap) {
+      var el = document.getElementById("news-list");
       if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
-      el.innerHTML = snap.docs.map(d => {
-        const n = d.data();
-        return `<div class="news-item">
-          <div class="news-meta"><span class="news-dot"></span>${formatDate(n.ts)}</div>
-          <div class="news-text">${n.text}</div>
-        </div>`;
+      el.innerHTML = snap.docs.map(function(d) {
+        var n = d.data();
+        return '<div class="news-item"><div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div><div class="news-text">' + n.text + '</div></div>';
       }).join("");
     });
   }
 
-  async function loadMeet() {
-    const snap = await getDoc(doc(db, "config", "meet"));
-    const area = document.getElementById("meet-area");
-    if (!snap.exists() || !snap.data().url) { area.innerHTML = ""; return; }
-    const m = snap.data();
-    area.innerHTML = `<a class="meet-banner" href="${m.url}" target="_blank" rel="noopener">
-      <div class="meet-icon">📹</div>
-      <div>
-        <div class="meet-label">Google Meet</div>
-        <div class="meet-desc">${m.desc || m.url}</div>
-      </div>
-      <div class="meet-arrow">↗</div>
-    </a>`;
+  function loadMeet() {
+    db.collection("config").doc("meet").get().then(function(snap) {
+      var area = document.getElementById("meet-area");
+      if (!snap.exists || !snap.data().url) { area.innerHTML = ""; return; }
+      var m = snap.data();
+      area.innerHTML = '<a class="meet-banner" href="' + m.url + '" target="_blank" rel="noopener"><div class="meet-icon">📹</div><div><div class="meet-label">Google Meet</div><div class="meet-desc">' + (m.desc || m.url) + '</div></div><div class="meet-arrow">↗</div></a>';
+    });
   }
 
-  // ── Boletins (admin) ──────────────────────
-  async function loadAdminNews() {
-    const q = query(collection(db, "boletins"), orderBy("ts", "desc"));
-    const snap = await getDocs(q);
-    const el = document.getElementById("admin-news-list");
-    if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
-    el.innerHTML = snap.docs.map(d => {
-      const n = d.data();
-      return `<div class="news-item">
-        <button class="news-delete" onclick="deleteNews('${d.id}')" title="Apagar">✕</button>
-        <div class="news-meta"><span class="news-dot"></span>${formatDate(n.ts)}</div>
-        <div class="news-text">${n.text}</div>
-      </div>`;
-    }).join("");
+  function loadAdminNews() {
+    db.collection("boletins").orderBy("ts", "desc").get().then(function(snap) {
+      var el = document.getElementById("admin-news-list");
+      if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
+      el.innerHTML = snap.docs.map(function(d) {
+        var n = d.data();
+        return '<div class="news-item"><button class="news-delete" onclick="deleteNews(\'' + d.id + '\')">✕</button><div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div><div class="news-text">' + n.text + '</div></div>';
+      }).join("");
+    });
   }
 
-  async function postNews() {
-    const txt = document.getElementById("post-text").value.trim();
+  function postNews() {
+    var txt = document.getElementById("post-text").value.trim();
     if (!txt) return;
-    await addDoc(collection(db, "boletins"), { text: txt, ts: serverTimestamp() });
-    document.getElementById("post-text").value = "";
-    toast("Boletim publicado ✓");
-    loadAdminNews();
+    db.collection("boletins").add({ text: txt, ts: firebase.firestore.FieldValue.serverTimestamp() })
+      .then(function() {
+        document.getElementById("post-text").value = "";
+        toast("Boletim publicado ✓");
+        loadAdminNews();
+      });
   }
-  window.postNews = postNews;
 
-  async function deleteNews(id) {
+  function deleteNews(id) {
     if (!confirm("Apagar este boletim?")) return;
-    await deleteDoc(doc(db, "boletins", id));
-    toast("Boletim removido.");
-    loadAdminNews();
-  }
-  window.deleteNews = deleteNews;
-
-  // ── Meet (admin) ──────────────────────────
-  async function loadMeetAdmin() {
-    const snap = await getDoc(doc(db, "config", "meet"));
-    if (snap.exists()) {
-      document.getElementById("meet-url").value  = snap.data().url  || "";
-      document.getElementById("meet-desc").value = snap.data().desc || "";
-    }
+    db.collection("boletins").doc(id).delete().then(function() {
+      toast("Boletim removido.");
+      loadAdminNews();
+    });
   }
 
-  async function saveMeet() {
-    const url  = document.getElementById("meet-url").value.trim();
-    const desc = document.getElementById("meet-desc").value.trim();
+  function loadMeetAdmin() {
+    db.collection("config").doc("meet").get().then(function(snap) {
+      if (snap.exists) {
+        document.getElementById("meet-url").value  = snap.data().url  || "";
+        document.getElementById("meet-desc").value = snap.data().desc || "";
+      }
+    });
+  }
+
+  function saveMeet() {
+    var url  = document.getElementById("meet-url").value.trim();
+    var desc = document.getElementById("meet-desc").value.trim();
     if (!url) return;
-    await setDoc(doc(db, "config", "meet"), { url, desc });
-    toast("Link do Meet salvo ✓");
+    db.collection("config").doc("meet").set({ url: url, desc: desc }).then(function() {
+      toast("Link do Meet salvo ✓");
+    });
   }
-  window.saveMeet = saveMeet;
 
-  async function removeMeet() {
-    await setDoc(doc(db, "config", "meet"), { url: "", desc: "" });
-    document.getElementById("meet-url").value  = "";
-    document.getElementById("meet-desc").value = "";
-    toast("Banner removido.");
+  function removeMeet() {
+    db.collection("config").doc("meet").set({ url: "", desc: "" }).then(function() {
+      document.getElementById("meet-url").value  = "";
+      document.getElementById("meet-desc").value = "";
+      toast("Banner removido.");
+    });
   }
-  window.removeMeet = removeMeet;
 
-  // ── Log de acessos ────────────────────────
-  async function loadLog() {
-    const q = query(collection(db, "acessos"), orderBy("ts", "desc"));
-    const snap = await getDocs(q);
-    logData = snap.docs.map(d => d.data());
-    const tbody = document.getElementById("log-body");
-    if (!logData.length) {
-      tbody.innerHTML = '<tr><td colspan="3" class="empty">Sem acessos ainda.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = logData.map(l =>
-      `<tr><td>${l.nome}</td><td>${l.tel}</td><td>${formatDate(l.ts)}</td></tr>`
-    ).join("");
+  function loadLog() {
+    db.collection("acessos").orderBy("ts", "desc").get().then(function(snap) {
+      logData = snap.docs.map(function(d) { return d.data(); });
+      var tbody = document.getElementById("log-body");
+      if (!logData.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">Sem acessos ainda.</td></tr>'; return; }
+      tbody.innerHTML = logData.map(function(l) {
+        return '<tr><td>' + l.nome + '</td><td>' + l.tel + '</td><td>' + formatDate(l.ts) + '</td></tr>';
+      }).join("");
+    });
   }
 
   function downloadCSV() {
     if (!logData.length) { toast("Nenhum dado para baixar."); return; }
-    const rows = [["Nome","Telefone","Data/Hora"],
-      ...logData.map(l => [l.nome, l.tel, formatDate(l.ts)])];
-    const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
-    const a = document.createElement("a");
+    var rows = [["Nome","Telefone","Data/Hora"]].concat(logData.map(function(l) { return [l.nome, l.tel, formatDate(l.ts)]; }));
+    var csv = rows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(","); }).join("\n");
+    var a = document.createElement("a");
     a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
     a.download = "acessos_boletim.csv";
     a.click();
   }
-  window.downloadCSV = downloadCSV;
 
-  // ── Init ──────────────────────────────────
+  // Init
   show("page-login");
 </script>
 
