@@ -131,12 +131,7 @@
         <label for="mem-msg">Sua mensagem</label>
         <textarea id="mem-msg" placeholder="Ex: João Victor, você é forte! Estamos todos torcendo por você. 💪"></textarea>
       </div>
-      <div class="field" style="margin-bottom:0.5rem;">
-        <label>Foto (opcional)</label>
-        <label class="photo-label" for="mem-photo">📷 Toque para adicionar uma foto</label>
-        <input type="file" id="mem-photo" accept="image/*" onchange="previewPhoto(this)" />
-        <img id="mem-preview" class="photo-preview" />
-      </div>
+
       <button class="btn-primary" onclick="postMemory()">Enviar para o Memory Book</button>
     </div>
     <div id="memory-list"><div class="empty">Seja o primeiro a deixar uma mensagem!</div></div>
@@ -221,7 +216,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
   const firebaseConfig = {
@@ -237,7 +231,6 @@
 
   firebase.initializeApp(firebaseConfig);
   var db      = firebase.firestore();
-  var storage = firebase.storage();
 
   var currentUser = null;
   var unsubNews   = null;
@@ -404,10 +397,22 @@
       if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
       el.innerHTML = snap.docs.map(function(d) {
         var n = d.data();
-        return '<div class="news-item">'
+        var dtVal = '';
+        if (n.ts) {
+          var dd = n.ts.toDate();
+          dd.setMinutes(dd.getMinutes() - dd.getTimezoneOffset());
+          dtVal = dd.toISOString().slice(0,16);
+        }
+        return '<div class="news-item" id="ni-' + d.id + '">'
           + '<button class="news-delete" onclick="deleteNews(\'' + d.id + '\')">✕</button>'
           + '<div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div>'
-          + '<div class="news-text">' + n.text + '</div>'
+          + '<div class="news-text" style="margin-bottom:8px">' + n.text + '</div>'
+          + '<details style="margin-top:6px">'
+          + '<summary style="font-size:12px;color:var(--accent-text);cursor:pointer;list-style:none;">✏️ Editar data</summary>'
+          + '<div style="margin-top:8px;display:flex;gap:8px;align-items:center;">'
+          + '<input type="datetime-local" value="' + dtVal + '" id="edt-' + d.id + '" style="flex:1;font-size:13px;padding:7px 10px;" />'
+          + '<button onclick="updateNewsDate(\'' + d.id + '\')" style="padding:7px 12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">Salvar</button>'
+          + '</div></details>'
           + '</div>';
       }).join("");
     });
@@ -427,6 +432,18 @@
         toast("Boletim publicado ✓");
         loadAdminNews();
       });
+  }
+
+  function updateNewsDate(id) {
+    var dt = document.getElementById("edt-" + id).value;
+    if (!dt) { toast("Escolha uma data."); return; }
+    var parts = dt.split("T"); var dp = parts[0].split("-"); var tp = parts[1].split(":");
+    var localDate = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(tp[0]),parseInt(tp[1]),0);
+    var ts = firebase.firestore.Timestamp.fromDate(localDate);
+    db.collection("boletins").doc(id).update({ ts: ts }).then(function() {
+      toast("Data atualizada ✓");
+      loadAdminNews();
+    });
   }
 
   function deleteNews(id) {
@@ -500,37 +517,17 @@
   }
 
   // ── Memory Book ────────────────────────────────────
-  function previewPhoto(input) {
-    var preview = document.getElementById("mem-preview");
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function(e) { preview.src = e.target.result; preview.style.display = "block"; };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
   function postMemory() {
-    var msg  = document.getElementById("mem-msg").value.trim();
-    var file = document.getElementById("mem-photo").files[0];
+    var msg = document.getElementById("mem-msg").value.trim();
     if (!msg) { toast("Escreva uma mensagem primeiro."); return; }
     var btn = document.querySelector("#memory-form .btn-primary");
     btn.disabled = true; btn.textContent = "Enviando...";
-
-    function saveMemory(photoUrl) {
-      db.collection("memoria").add({ nome: currentUser.nome, tel: currentUser.tel, msg: msg, photoUrl: photoUrl || "", ts: firebase.firestore.FieldValue.serverTimestamp() })
-        .then(function() {
-          document.getElementById("mem-msg").value = "";
-          document.getElementById("mem-photo").value = "";
-          document.getElementById("mem-preview").style.display = "none";
-          btn.disabled = false; btn.textContent = "Enviar para o Memory Book";
-          toast("Mensagem adicionada ao Memory Book ✓");
-        });
-    }
-
-    if (file) {
-      var ref = storage.ref("memoria/" + Date.now() + "_" + file.name);
-      ref.put(file).then(function() { ref.getDownloadURL().then(function(url) { saveMemory(url); }); }).catch(function() { saveMemory(""); });
-    } else { saveMemory(""); }
+    db.collection("memoria").add({ nome: currentUser.nome, tel: currentUser.tel, msg: msg, ts: firebase.firestore.FieldValue.serverTimestamp() })
+      .then(function() {
+        document.getElementById("mem-msg").value = "";
+        btn.disabled = false; btn.textContent = "Enviar para o Memory Book";
+        toast("Mensagem adicionada ao Memory Book ✓");
+      });
   }
 
   function listenMemory() {
@@ -540,8 +537,7 @@
       if (snap.empty) { el.innerHTML = '<div class="empty">Seja o primeiro a deixar uma mensagem!</div>'; return; }
       el.innerHTML = snap.docs.map(function(d) {
         var m = d.data();
-        var photo = m.photoUrl ? '<img class="memory-photo" src="' + m.photoUrl + '" />' : "";
-        return '<div class="memory-item"><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div>' + photo + '</div>';
+        return '<div class="memory-item"><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div></div>';
       }).join("");
     });
   }
@@ -552,8 +548,7 @@
       if (snap.empty) { el.innerHTML = '<div class="empty">Nenhuma mensagem ainda.</div>'; return; }
       el.innerHTML = snap.docs.map(function(d) {
         var m = d.data();
-        var photo = m.photoUrl ? '<img class="memory-photo" src="' + m.photoUrl + '" />' : "";
-        return '<div class="memory-item"><button class="memory-delete" onclick="deleteMemory(\'' + d.id + '\')">✕</button><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div>' + photo + '</div>';
+        return '<div class="memory-item"><button class="memory-delete" onclick="deleteMemory(\'' + d.id + '\')">✕</button><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div></div>';
       }).join("");
     });
   }
