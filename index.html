@@ -131,11 +131,10 @@
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </header>
 
-  <!-- Tabs família -->
+  <!-- Tabs família: Boletins + Memory -->
   <div class="family-tabs">
     <button class="ftab active" onclick="switchFTab('ft-boletim', this)">📋 Boletins</button>
-    <button class="ftab" onclick="switchFTab('ft-meet', this)">📹 Meet</button>
-    <button class="ftab" onclick="switchFTab('ft-memory', this)">💌 Memory</button>
+    <button class="ftab" onclick="switchFTab('ft-memory', this)">💌 Memory Book</button>
   </div>
 
   <div class="container">
@@ -144,24 +143,20 @@
       <button onclick="togglePreview()" style="background:none;border:none;font-size:13px;color:#92400e;font-weight:600;cursor:pointer;">← Voltar ao admin</button>
     </div>
 
+    <!-- Meet banner fixo (aparece em ambas as abas quando ativo) -->
+    <div id="meet-area-family" style="margin-top:1rem;"></div>
+
     <!-- Boletins -->
     <div id="ft-boletim" class="ftab-panel active">
-      <div id="motiv-area" style="margin-top:1rem;"></div>
+      <div id="motiv-area"></div>
       <div id="news-list" style="margin-top:0.5rem;"><div class="empty">Nenhum boletim ainda.</div></div>
-    </div>
-
-    <!-- Meet -->
-    <div id="ft-meet" class="ftab-panel">
-      <div style="margin-top:1rem;" id="meet-area-family">
-        <div class="meet-none">Nenhum link ativo no momento.</div>
-      </div>
     </div>
 
     <!-- Memory -->
     <div id="ft-memory" class="ftab-panel">
-      <div style="margin-top:1rem;">
+      <div style="margin-top:0.5rem;">
         <div class="card" id="memory-form" style="margin-bottom:1rem;">
-          <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:1rem;">Deixe uma mensagem para o João Victor ler quando acordar. Ela será aprovada pelo admin antes de aparecer aqui.</p>
+          <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:1rem;">Deixe uma mensagem para o João Victor ler quando acordar. Ela será aprovada antes de aparecer aqui.</p>
           <div class="field" style="margin-bottom:0.75rem;">
             <label for="mem-msg">Sua mensagem</label>
             <textarea id="mem-msg" placeholder="Ex: João Victor, você é forte! Estamos todos torcendo por você. 💪"></textarea>
@@ -550,7 +545,7 @@
     db.collection("config").doc("meet").get().then(function(snap) {
       var area = document.getElementById("meet-area-family");
       if (!snap.exists || !snap.data().url) {
-        area.innerHTML = '<div class="meet-none">Nenhum link ativo no momento.</div>'; return;
+        area.innerHTML = ''; return;
       }
       var m = snap.data();
       area.innerHTML = '<a class="meet-banner" href="' + m.url + '" target="_blank" rel="noopener">'
