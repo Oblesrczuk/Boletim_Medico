@@ -320,23 +320,31 @@
     err.style.display = "none";
     document.getElementById("btn-login").disabled = true;
 
-    db.collection("acessos").add({ nome: nome, tel: tel, ts: firebase.firestore.FieldValue.serverTimestamp() })
-      .then(function() {
-        currentUser = { nome: nome, tel: tel };
-        if (tel === ADMIN_PHONE) {
-          show("page-admin");
-          setNow();
-          loadAdminNews();
-          loadMeetAdmin();
-          loadMotivAdmin();
-        } else {
-          document.getElementById("welcome-name").textContent = nome;
-          show("page-news");
-          listenNews();
-          loadMeet();
-          loadMotiv();
-          listenMemory();
-        }
+    // Verifica se telefone já acessou antes
+    db.collection("acessos").where("tel", "==", tel).limit(1).get()
+      .then(function(existing) {
+        var isNew = existing.empty;
+        var promise = isNew
+          ? db.collection("acessos").add({ nome: nome, tel: tel, ts: firebase.firestore.FieldValue.serverTimestamp() })
+          : Promise.resolve();
+
+        return promise.then(function() {
+          currentUser = { nome: nome, tel: tel };
+          if (tel === ADMIN_PHONE) {
+            show("page-admin");
+            setNow();
+            loadAdminNews();
+            loadMeetAdmin();
+            loadMotivAdmin();
+          } else {
+            document.getElementById("welcome-name").textContent = nome;
+            show("page-news");
+            listenNews();
+            loadMeet();
+            loadMotiv();
+            listenMemory();
+          }
+        });
       })
       .catch(function(e) {
         err.textContent = "Erro ao conectar: " + e.message;
@@ -411,7 +419,7 @@
     if (!txt) { toast("Escreva o texto do boletim."); return; }
     if (!dt)  { toast("Escolha a data e hora."); return; }
 
-    var ts = firebase.firestore.Timestamp.fromDate(new Date(dt));
+    var parts = dt.split("T"); var dp = parts[0].split("-"); var tp = parts[1].split(":"); var localDate = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(tp[0]),parseInt(tp[1]),0); var ts = firebase.firestore.Timestamp.fromDate(localDate);
     db.collection("boletins").add({ text: txt, ts: ts })
       .then(function() {
         document.getElementById("post-text").value = "";
@@ -557,8 +565,13 @@
 
   // ── Log ────────────────────────────────────────────
   function loadLog() {
-    db.collection("acessos").orderBy("ts", "desc").get().then(function(snap) {
-      logData = snap.docs.map(function(d) { return d.data(); });
+    db.collection("acessos").orderBy("ts", "asc").get().then(function(snap) {
+      // deduplica por telefone — mantém primeiro acesso de cada número
+      var seen = {};
+      var all = snap.docs.map(function(d) { return d.data(); });
+      var deduped = [];
+      all.forEach(function(l) { if (!seen[l.tel]) { seen[l.tel] = true; deduped.push(l); } });
+      logData = deduped.reverse(); // mais recente primeiro
       var tbody = document.getElementById("log-body");
       if (!logData.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">Sem acessos ainda.</td></tr>'; return; }
       tbody.innerHTML = logData.map(function(l) {
