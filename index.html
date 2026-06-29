@@ -70,12 +70,12 @@
 </head>
 <body>
 
-<div id="page-loading" class="page active loader">
+<div id="page-loading" class="page loader">
   <div class="spinner"></div>
   <span>Carregando...</span>
 </div>
 
-<div id="page-login" class="page">
+<div id="page-login" class="page active">
   <div class="login-wrap">
     <div class="login-card">
       <div class="login-icon">🏥</div>
@@ -350,6 +350,8 @@
   }
 
   // Init
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("page-login").classList.add("active");
   show("page-login");
 </script>
 
