@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boletim Médico</title>
+  <title>Boletim Médico — João Victor</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -11,6 +11,8 @@
       --text: #1a1a18; --muted: #7a7870; --accent: #2563eb;
       --accent-bg: #eff6ff; --accent-text: #1d4ed8;
       --success: #16a34a; --success-bg: #f0fdf4; --success-border: #bbf7d0;
+      --warning-bg: #fffbeb; --warning-border: #fde68a; --warning-text: #92400e;
+      --purple-bg: #f5f3ff; --purple-border: #ddd6fe; --purple-text: #5b21b6;
       --danger: #dc2626; --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
@@ -30,7 +32,7 @@
     .login-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 1.75rem; }
     .field { margin-bottom: 1rem; }
     label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-    input[type=text], input[type=tel], textarea { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; color: var(--text); background: var(--bg); outline: none; font-family: inherit; -webkit-appearance: none; }
+    input[type=text], input[type=tel], input[type=datetime-local], textarea { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; color: var(--text); background: var(--bg); outline: none; font-family: inherit; -webkit-appearance: none; }
     input:focus, textarea:focus { border-color: var(--accent); background: #fff; }
     textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
     .error-msg { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
@@ -38,20 +40,39 @@
     .btn-primary:disabled { opacity: 0.5; }
     .btn-secondary { padding: 8px 16px; background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; }
     .tabs { display: flex; gap: 6px; margin-bottom: 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 5px; }
-    .tab-btn { flex: 1; padding: 8px 6px; border: none; border-radius: 8px; background: none; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; }
+    .tab-btn { flex: 1; padding: 8px 4px; border: none; border-radius: 8px; background: none; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; }
     .tab-btn.active { background: var(--accent-bg); color: var(--accent-text); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
-    .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+    /* Agrupamento por dia */
+    .day-group { margin-bottom: 1.5rem; }
+    .day-label { font-size: 12px; font-weight: 700; color: var(--accent-text); background: var(--accent-bg); border: 1px solid #bfdbfe; border-radius: 20px; padding: 4px 14px; display: inline-block; margin-bottom: 0.75rem; }
+    .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 0.5rem; }
     .news-meta { font-size: 11px; color: var(--muted); margin-bottom: 7px; display: flex; align-items: center; gap: 5px; }
     .news-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; }
+    .news-time { font-weight: 600; color: var(--accent-text); }
     .news-text { font-size: 15px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
     .news-delete { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; float: right; margin: -4px -6px 0 8px; }
     .meet-banner { display: flex; align-items: center; gap: 14px; background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 14px; padding: 1rem 1.25rem; text-decoration: none; margin-bottom: 1.25rem; }
+    .meet-banner:hover { opacity: 0.85; }
     .meet-icon { width: 40px; height: 40px; background: var(--success); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .meet-label { font-size: 11px; font-weight: 600; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; }
     .meet-desc { font-size: 14px; font-weight: 500; color: #166534; margin-top: 2px; }
     .meet-arrow { margin-left: auto; font-size: 18px; color: var(--success); }
+    .motiv-banner { background: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+    .motiv-label { font-size: 11px; font-weight: 600; color: var(--warning-text); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .motiv-text { font-size: 15px; line-height: 1.7; color: var(--warning-text); font-style: italic; }
+    .memory-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+    .memory-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .memory-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--purple-bg); border: 1px solid var(--purple-border); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--purple-text); flex-shrink: 0; }
+    .memory-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .memory-date { font-size: 11px; color: var(--muted); }
+    .memory-msg { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 8px; }
+    .memory-photo { width: 100%; border-radius: 10px; margin-top: 8px; max-height: 300px; object-fit: cover; }
+    .memory-delete { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; float: right; margin: -4px -6px 0 8px; }
+    .photo-preview { width: 100%; border-radius: 10px; margin-top: 8px; max-height: 200px; object-fit: cover; display: none; }
+    .photo-label { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: 1.5px dashed var(--border); border-radius: 10px; cursor: pointer; color: var(--muted); font-size: 13px; margin-top: 4px; }
+    input[type=file] { display: none; }
     .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .log-table th { text-align: left; padding: 8px 10px; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
     .log-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
@@ -59,28 +80,25 @@
     .section-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 1.5rem 0 0.75rem; }
     .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1a18; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .loader { display: none; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 12px; color: var(--muted); font-size: 14px; }
-    .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
     .empty { font-size: 14px; color: var(--muted); text-align: center; padding: 2rem 0; }
     .welcome-bar { background: var(--accent-bg); border: 1px solid #bfdbfe; border-radius: 12px; padding: 0.875rem 1.1rem; margin-bottom: 1.25rem; font-size: 14px; }
     .welcome-bar strong { color: var(--accent-text); }
     .welcome-bar span { color: var(--muted); font-size: 13px; }
+    @media print {
+      .app-header, .tabs, .btn-primary, .btn-secondary, .btn-logout, .memory-delete, #memory-form { display: none !important; }
+      .memory-item { break-inside: avoid; border: 1px solid #ccc; margin-bottom: 1rem; }
+      body { background: white; }
+    }
   </style>
 </head>
 <body>
-
-<div id="page-loading" class="page loader">
-  <div class="spinner"></div>
-  <span>Carregando...</span>
-</div>
 
 <div id="page-login" class="page active">
   <div class="login-wrap">
     <div class="login-card">
       <div class="login-icon">🏥</div>
       <div class="login-title">Boletim médico</div>
-      <div class="login-sub">Atualizações sobre a recuperação do Pedro. Informe seus dados para acessar — o acesso é registrado.</div>
+      <div class="login-sub">Atualizações sobre a recuperação do João Victor. Informe seus dados para acessar — o acesso é registrado.</div>
       <div class="field">
         <label for="inp-nome">Seu nome completo</label>
         <input type="text" id="inp-nome" placeholder="Ex: Maria da Silva" autocomplete="new-password" autocorrect="off" autocapitalize="words" spellcheck="false" />
@@ -97,14 +115,31 @@
 
 <div id="page-news" class="page">
   <header class="app-header">
-    <div class="brand"><div class="brand-icon">🏥</div><div class="brand-name">Boletim médico</div></div>
+    <div class="brand"><div class="brand-icon">🏥</div><div class="brand-name">João Victor</div></div>
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </header>
   <div class="container">
-    <div class="welcome-bar">Olá, <strong id="welcome-name">—</strong><br><span>Atualizações em tempo real sobre a recuperação.</span></div>
+    <div class="welcome-bar">Olá, <strong id="welcome-name">—</strong><br><span>Acompanhe a recuperação do João Victor.</span></div>
+    <div id="motiv-area"></div>
     <div id="meet-area"></div>
     <div class="section-title">Boletins</div>
     <div id="news-list"><div class="empty">Nenhum boletim ainda.</div></div>
+    <div class="section-title">💌 Memory Book</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Deixe uma mensagem e foto para o João Victor ler quando acordar.</p>
+    <div class="card" id="memory-form" style="margin-bottom:1rem;">
+      <div class="field">
+        <label for="mem-msg">Sua mensagem</label>
+        <textarea id="mem-msg" placeholder="Ex: João Victor, você é forte! Estamos todos torcendo por você. 💪"></textarea>
+      </div>
+      <div class="field" style="margin-bottom:0.5rem;">
+        <label>Foto (opcional)</label>
+        <label class="photo-label" for="mem-photo">📷 Toque para adicionar uma foto</label>
+        <input type="file" id="mem-photo" accept="image/*" onchange="previewPhoto(this)" />
+        <img id="mem-preview" class="photo-preview" />
+      </div>
+      <button class="btn-primary" onclick="postMemory()">Enviar para o Memory Book</button>
+    </div>
+    <div id="memory-list"><div class="empty">Seja o primeiro a deixar uma mensagem!</div></div>
   </div>
 </div>
 
@@ -116,20 +151,40 @@
   <div class="container">
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('tab-post',this)">Boletim</button>
+      <button class="tab-btn" onclick="switchTab('tab-motiv',this)">Mensagem</button>
       <button class="tab-btn" onclick="switchTab('tab-meet',this)">Meet</button>
+      <button class="tab-btn" onclick="switchTab('tab-memory',this)">Memory</button>
       <button class="tab-btn" onclick="switchTab('tab-log',this)">Acessos</button>
     </div>
+
     <div id="tab-post" class="tab-panel active">
       <div class="card">
+        <div class="field">
+          <label for="post-dt">Data e hora do boletim</label>
+          <input type="datetime-local" id="post-dt" />
+        </div>
         <div class="field" style="margin-bottom:0.75rem;">
-          <label for="post-text">Novo boletim</label>
-          <textarea id="post-text" placeholder="Ex: Boa tarde. Pedro está bem, sem febre. Medicação ajustada."></textarea>
+          <label for="post-text">Texto do boletim</label>
+          <textarea id="post-text" placeholder="Ex: Boa tarde. João Victor está bem, sem febre. Medicação ajustada."></textarea>
         </div>
         <button class="btn-primary" onclick="postNews()">Publicar</button>
       </div>
       <div class="section-title">Publicados</div>
       <div id="admin-news-list"><div class="empty">Nenhum boletim ainda.</div></div>
     </div>
+
+    <div id="tab-motiv" class="tab-panel">
+      <div class="card">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Esta mensagem aparece no topo para todos que acessarem. Use para frases de motivação ou recados gerais.</p>
+        <div class="field">
+          <label for="motiv-text">Mensagem do dia</label>
+          <textarea id="motiv-text" placeholder="Ex: &quot;A força não vem do corpo. Vem da vontade da alma.&quot; — Gandhi"></textarea>
+        </div>
+        <button class="btn-primary" onclick="saveMotiv()">Publicar mensagem</button>
+        <button class="btn-secondary" onclick="removeMotiv()" style="margin-top:8px;width:100%;">Remover mensagem</button>
+      </div>
+    </div>
+
     <div id="tab-meet" class="tab-panel">
       <div class="card">
         <div class="field">
@@ -144,6 +199,12 @@
         <button class="btn-secondary" onclick="removeMeet()" style="margin-top:8px;width:100%;">Remover banner</button>
       </div>
     </div>
+
+    <div id="tab-memory" class="tab-panel">
+      <button class="btn-secondary" onclick="window.print()" style="width:100%;margin-bottom:1rem;">🖨️ Imprimir Memory Book</button>
+      <div id="admin-memory-list"><div class="empty">Nenhuma mensagem ainda.</div></div>
+    </div>
+
     <div id="tab-log" class="tab-panel">
       <div class="card" style="padding:0;overflow:hidden;">
         <table class="log-table">
@@ -158,14 +219,11 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK (compat - funciona em todos os browsers) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
-  // ═══════════════════════════════════════
-  //  COLE SUAS CREDENCIAIS FIREBASE AQUI
-  // ═══════════════════════════════════════
   const firebaseConfig = {
     apiKey:            "AIzaSyDi1_qKgponC9QakJkQ73ZJ0Cgm_NkGNBU",
     authDomain:        "boletim-medico-oblesrczuk.firebaseapp.com",
@@ -175,22 +233,52 @@
     appId:             "1:461214222116:web:9e0ccd2e422b7b080015b1"
   };
 
-  // Número do admin (só dígitos, com DDD)
-  const ADMIN_PHONE = "11992479798"; // ← troque pelo seu número
+  const ADMIN_PHONE = "11992479798";
 
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  var db      = firebase.firestore();
+  var storage = firebase.storage();
 
-  let currentUser = null;
-  let unsubNews = null;
-  let logData = [];
+  var currentUser = null;
+  var unsubNews   = null;
+  var unsubMemory = null;
+  var logData     = [];
 
+  // ── Utilitários ───────────────────────────────────
   function cleanPhone(v) { return v.replace(/\D/g, ""); }
 
   function formatDate(ts) {
     if (!ts) return "—";
-    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
     return d.toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  }
+
+  function formatTime(ts) {
+    if (!ts) return "—";
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+  }
+
+  function formatDayLabel(ts) {
+    if (!ts) return "—";
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    var today    = new Date(); today.setHours(0,0,0,0);
+    var yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
+    var day = new Date(d); day.setHours(0,0,0,0);
+    var label = d.toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"2-digit" });
+    if (day.getTime() === today.getTime())     label = "Hoje — " + d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
+    if (day.getTime() === yesterday.getTime()) label = "Ontem — " + d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function dayKey(ts) {
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toISOString().slice(0,10);
+  }
+
+  function initials(name) {
+    var parts = name.trim().split(" ");
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
   function show(id) {
@@ -210,10 +298,20 @@
     document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     btn.classList.add("active");
-    if (id === "tab-log") loadLog();
-    if (id === "tab-meet") loadMeetAdmin();
+    if (id === "tab-log")    loadLog();
+    if (id === "tab-meet")   loadMeetAdmin();
+    if (id === "tab-motiv")  loadMotivAdmin();
+    if (id === "tab-memory") loadAdminMemory();
   }
 
+  // preenche o datetime-local com agora
+  function setNow() {
+    var now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById("post-dt").value = now.toISOString().slice(0,16);
+  }
+
+  // ── Login ──────────────────────────────────────────
   function doLogin() {
     var nome = document.getElementById("inp-nome").value.trim();
     var tel  = cleanPhone(document.getElementById("inp-tel").value);
@@ -227,13 +325,17 @@
         currentUser = { nome: nome, tel: tel };
         if (tel === ADMIN_PHONE) {
           show("page-admin");
+          setNow();
           loadAdminNews();
           loadMeetAdmin();
+          loadMotivAdmin();
         } else {
           document.getElementById("welcome-name").textContent = nome;
           show("page-news");
           listenNews();
           loadMeet();
+          loadMotiv();
+          listenMemory();
         }
       })
       .catch(function(e) {
@@ -244,51 +346,76 @@
   }
 
   function doLogout() {
-    if (unsubNews) { unsubNews(); unsubNews = null; }
+    if (unsubNews)   { unsubNews();   unsubNews   = null; }
+    if (unsubMemory) { unsubMemory(); unsubMemory = null; }
     currentUser = null;
     document.getElementById("inp-nome").value = "";
     document.getElementById("inp-tel").value  = "";
     show("page-login");
   }
 
+  // ── Boletins (família) — agrupados por dia ─────────
+  function renderNewsByDay(docs) {
+    var el = document.getElementById("news-list");
+    if (!docs.length) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
+
+    // agrupa por dia
+    var groups = {};
+    var order  = [];
+    docs.forEach(function(d) {
+      var n  = d.data();
+      var ts = n.ts;
+      var key = ts ? dayKey(ts) : "0000-00-00";
+      if (!groups[key]) { groups[key] = { label: ts ? formatDayLabel(ts) : "—", items: [] }; order.push(key); }
+      groups[key].items.push(n);
+    });
+
+    el.innerHTML = order.map(function(key) {
+      var g = groups[key];
+      var items = g.items.map(function(n) {
+        return '<div class="news-item">'
+          + '<div class="news-meta"><span class="news-dot"></span><span class="news-time">' + formatTime(n.ts) + '</span></div>'
+          + '<div class="news-text">' + n.text + '</div>'
+          + '</div>';
+      }).join("");
+      return '<div class="day-group"><div class="day-label">📅 ' + g.label + '</div>' + items + '</div>';
+    }).join("");
+  }
+
   function listenNews() {
     var q = db.collection("boletins").orderBy("ts", "desc");
     unsubNews = q.onSnapshot(function(snap) {
-      var el = document.getElementById("news-list");
-      if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
-      el.innerHTML = snap.docs.map(function(d) {
-        var n = d.data();
-        return '<div class="news-item"><div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div><div class="news-text">' + n.text + '</div></div>';
-      }).join("");
+      renderNewsByDay(snap.docs);
     });
   }
 
-  function loadMeet() {
-    db.collection("config").doc("meet").get().then(function(snap) {
-      var area = document.getElementById("meet-area");
-      if (!snap.exists || !snap.data().url) { area.innerHTML = ""; return; }
-      var m = snap.data();
-      area.innerHTML = '<a class="meet-banner" href="' + m.url + '" target="_blank" rel="noopener"><div class="meet-icon">📹</div><div><div class="meet-label">Google Meet</div><div class="meet-desc">' + (m.desc || m.url) + '</div></div><div class="meet-arrow">↗</div></a>';
-    });
-  }
-
+  // ── Boletins (admin) ───────────────────────────────
   function loadAdminNews() {
     db.collection("boletins").orderBy("ts", "desc").get().then(function(snap) {
       var el = document.getElementById("admin-news-list");
       if (snap.empty) { el.innerHTML = '<div class="empty">Nenhum boletim ainda.</div>'; return; }
       el.innerHTML = snap.docs.map(function(d) {
         var n = d.data();
-        return '<div class="news-item"><button class="news-delete" onclick="deleteNews(\'' + d.id + '\')">✕</button><div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div><div class="news-text">' + n.text + '</div></div>';
+        return '<div class="news-item">'
+          + '<button class="news-delete" onclick="deleteNews(\'' + d.id + '\')">✕</button>'
+          + '<div class="news-meta"><span class="news-dot"></span>' + formatDate(n.ts) + '</div>'
+          + '<div class="news-text">' + n.text + '</div>'
+          + '</div>';
       }).join("");
     });
   }
 
   function postNews() {
     var txt = document.getElementById("post-text").value.trim();
-    if (!txt) return;
-    db.collection("boletins").add({ text: txt, ts: firebase.firestore.FieldValue.serverTimestamp() })
+    var dt  = document.getElementById("post-dt").value;
+    if (!txt) { toast("Escreva o texto do boletim."); return; }
+    if (!dt)  { toast("Escolha a data e hora."); return; }
+
+    var ts = firebase.firestore.Timestamp.fromDate(new Date(dt));
+    db.collection("boletins").add({ text: txt, ts: ts })
       .then(function() {
         document.getElementById("post-text").value = "";
+        setNow();
         toast("Boletim publicado ✓");
         loadAdminNews();
       });
@@ -299,6 +426,44 @@
     db.collection("boletins").doc(id).delete().then(function() {
       toast("Boletim removido.");
       loadAdminNews();
+    });
+  }
+
+  // ── Mensagem do dia ────────────────────────────────
+  function loadMotiv() {
+    db.collection("config").doc("motiv").get().then(function(snap) {
+      var area = document.getElementById("motiv-area");
+      if (!snap.exists || !snap.data().text) { area.innerHTML = ""; return; }
+      area.innerHTML = '<div class="motiv-banner"><div class="motiv-label">✨ Mensagem do dia</div><div class="motiv-text">' + snap.data().text + '</div></div>';
+    });
+  }
+
+  function loadMotivAdmin() {
+    db.collection("config").doc("motiv").get().then(function(snap) {
+      if (snap.exists && snap.data().text) document.getElementById("motiv-text").value = snap.data().text;
+    });
+  }
+
+  function saveMotiv() {
+    var txt = document.getElementById("motiv-text").value.trim();
+    if (!txt) return;
+    db.collection("config").doc("motiv").set({ text: txt }).then(function() { toast("Mensagem publicada ✓"); });
+  }
+
+  function removeMotiv() {
+    db.collection("config").doc("motiv").set({ text: "" }).then(function() {
+      document.getElementById("motiv-text").value = "";
+      toast("Mensagem removida.");
+    });
+  }
+
+  // ── Meet ───────────────────────────────────────────
+  function loadMeet() {
+    db.collection("config").doc("meet").get().then(function(snap) {
+      var area = document.getElementById("meet-area");
+      if (!snap.exists || !snap.data().url) { area.innerHTML = ""; return; }
+      var m = snap.data();
+      area.innerHTML = '<a class="meet-banner" href="' + m.url + '" target="_blank" rel="noopener"><div class="meet-icon">📹</div><div><div class="meet-label">Google Meet</div><div class="meet-desc">' + (m.desc || m.url) + '</div></div><div class="meet-arrow">↗</div></a>';
     });
   }
 
@@ -315,9 +480,7 @@
     var url  = document.getElementById("meet-url").value.trim();
     var desc = document.getElementById("meet-desc").value.trim();
     if (!url) return;
-    db.collection("config").doc("meet").set({ url: url, desc: desc }).then(function() {
-      toast("Link do Meet salvo ✓");
-    });
+    db.collection("config").doc("meet").set({ url: url, desc: desc }).then(function() { toast("Link do Meet salvo ✓"); });
   }
 
   function removeMeet() {
@@ -328,6 +491,71 @@
     });
   }
 
+  // ── Memory Book ────────────────────────────────────
+  function previewPhoto(input) {
+    var preview = document.getElementById("mem-preview");
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) { preview.src = e.target.result; preview.style.display = "block"; };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function postMemory() {
+    var msg  = document.getElementById("mem-msg").value.trim();
+    var file = document.getElementById("mem-photo").files[0];
+    if (!msg) { toast("Escreva uma mensagem primeiro."); return; }
+    var btn = document.querySelector("#memory-form .btn-primary");
+    btn.disabled = true; btn.textContent = "Enviando...";
+
+    function saveMemory(photoUrl) {
+      db.collection("memoria").add({ nome: currentUser.nome, tel: currentUser.tel, msg: msg, photoUrl: photoUrl || "", ts: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(function() {
+          document.getElementById("mem-msg").value = "";
+          document.getElementById("mem-photo").value = "";
+          document.getElementById("mem-preview").style.display = "none";
+          btn.disabled = false; btn.textContent = "Enviar para o Memory Book";
+          toast("Mensagem adicionada ao Memory Book ✓");
+        });
+    }
+
+    if (file) {
+      var ref = storage.ref("memoria/" + Date.now() + "_" + file.name);
+      ref.put(file).then(function() { ref.getDownloadURL().then(function(url) { saveMemory(url); }); }).catch(function() { saveMemory(""); });
+    } else { saveMemory(""); }
+  }
+
+  function listenMemory() {
+    var q = db.collection("memoria").orderBy("ts", "desc");
+    unsubMemory = q.onSnapshot(function(snap) {
+      var el = document.getElementById("memory-list");
+      if (snap.empty) { el.innerHTML = '<div class="empty">Seja o primeiro a deixar uma mensagem!</div>'; return; }
+      el.innerHTML = snap.docs.map(function(d) {
+        var m = d.data();
+        var photo = m.photoUrl ? '<img class="memory-photo" src="' + m.photoUrl + '" />' : "";
+        return '<div class="memory-item"><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div>' + photo + '</div>';
+      }).join("");
+    });
+  }
+
+  function loadAdminMemory() {
+    db.collection("memoria").orderBy("ts", "desc").get().then(function(snap) {
+      var el = document.getElementById("admin-memory-list");
+      if (snap.empty) { el.innerHTML = '<div class="empty">Nenhuma mensagem ainda.</div>'; return; }
+      el.innerHTML = snap.docs.map(function(d) {
+        var m = d.data();
+        var photo = m.photoUrl ? '<img class="memory-photo" src="' + m.photoUrl + '" />' : "";
+        return '<div class="memory-item"><button class="memory-delete" onclick="deleteMemory(\'' + d.id + '\')">✕</button><div class="memory-header"><div class="memory-avatar">' + initials(m.nome) + '</div><div><div class="memory-name">' + m.nome + '</div><div class="memory-date">' + formatDate(m.ts) + '</div></div></div><div class="memory-msg">' + m.msg + '</div>' + photo + '</div>';
+      }).join("");
+    });
+  }
+
+  function deleteMemory(id) {
+    if (!confirm("Apagar esta mensagem?")) return;
+    db.collection("memoria").doc(id).delete().then(function() { toast("Mensagem removida."); loadAdminMemory(); });
+  }
+
+  // ── Log ────────────────────────────────────────────
   function loadLog() {
     db.collection("acessos").orderBy("ts", "desc").get().then(function(snap) {
       logData = snap.docs.map(function(d) { return d.data(); });
@@ -348,12 +576,6 @@
     a.download = "acessos_boletim.csv";
     a.click();
   }
-
-  // Init
-  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
-  document.getElementById("page-login").classList.add("active");
-  show("page-login");
 </script>
-
 </body>
 </html>
